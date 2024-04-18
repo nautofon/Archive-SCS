@@ -18,6 +18,7 @@ BEGIN {
     cityhash64_hex
     cityhash64_bin
     cityhash64_as_hex
+    cityhash64_as_int
   );
 }
 
@@ -54,6 +55,13 @@ sub cityhash64_hex :prototype($) ($hash_hex) {
 # Output: the hash as 16-byte hex-encoded string scalar (human-readable)
 sub cityhash64_as_hex :prototype($) ($hash) {
   unpack 'H*', $hash;
+}
+
+
+# Input: the internal format
+# Output: the hash as integer
+sub cityhash64_as_int :prototype($) ($hash) {
+  unpack 'Q>', $hash;
 }
 
 

@@ -5,13 +5,19 @@ no warnings 'experimental::class';
 class Archive::SCS::HashFS 0.00
   :isa( Archive::SCS::Mountable );
 
-use Archive::SCS::CityHash qw(cityhash64 cityhash64_int);
+use Archive::SCS::CityHash qw(
+  cityhash64
+  cityhash64_int
+  cityhash64_hex
+  cityhash64_as_hex
+  cityhash64_as_int
+);
 use Archive::SCS::DirIndex;
 use Carp 'croak';
 use Compress::Raw::Zlib 2.048 qw(crc32 Z_OK Z_STREAM_END);
 use Fcntl 'SEEK_SET';
-# use String::CRC32 'crc32';
 use List::Util 'first';
+use Path::Tiny 0.053 'path';
 
 our @CARP_NOT = qw( Archive::SCS );
 
@@ -196,6 +202,77 @@ method read_entry ($hash) {
 
 method entries () {
   keys %entries
+}
+
+
+sub create_file ($pathname, $scs) {
+  $scs isa Archive::SCS or die;
+
+  # This subroutine is designed for internal testing. It may or may not
+  # produce files that are compatible with SCS. All entry contents are
+  # loaded into memory.
+
+  my (@entries, %entries);
+  push @entries, map { cityhash64 $_ } $scs->list_dirs, $scs->list_files;
+  push @entries, map { cityhash64_hex $_ } $scs->list_orphans;
+  push @entries, cityhash64 '' if eval { $scs->read_entry(''); 1 };
+  @entries = sort @entries;
+  $entries{$_} = {
+    data => $scs->read_entry(cityhash64_as_hex $_),
+    flags => 0,
+  } for @entries;
+
+  # Serialize directory listings
+  do {
+    $entries{$_}->{flags} |= 0x1;
+    $entries{$_}->{data} = join "\n",
+      $entries{$_}->{data}->files,
+      map { "*$_" } $entries{$_}->{data}->dirs;
+  } for grep {
+    $entries{$_}->{data} isa Archive::SCS::DirIndex
+  } keys %entries;
+
+  my %opts2 = ( -CRC32 => 1, -WindowBits => 15, -Level => 9 );
+  my $zlib_d = Compress::Raw::Zlib::Deflate->new(%opts2) or die;
+  my $rfc1950header = chr( 8 | 15-8 << 4 ) . chr( 26 | 0 << 5 | 3 << 6 );
+  # For some reason I can't get zlib to add the proper header automatically.
+
+  my $offset = 0;
+  for my $hash (@entries) {
+
+    # Compress entry contents
+    $zlib_d->deflate( \($entries{$hash}->{data}), \(my $compressed = '') );
+    $zlib_d->flush( \$compressed );
+    $entries{$hash}->{crc} = $zlib_d->crc32;
+    $entries{$hash}->{size} = $zlib_d->total_in;
+    $zlib_d->deflateReset;
+    $compressed = $rfc1950header . $compressed;
+    if (length $compressed < $entries{$hash}->{size}) {
+      $entries{$hash}->{data} = $compressed;
+      $entries{$hash}->{flags} |= 0x2;
+    }
+
+    $entries{$hash}->{offset} = $offset;
+    $offset += length $entries{$hash}->{data};
+  }
+
+  my $fh = (path $pathname)->openw_raw;
+  print $fh pack 'A4 vv A4 VV',
+    $MAGIC, 1, 0, 'CITY', (scalar @entries), my $start = 0x40;
+  print $fh "\0" x ($start - 0x14);
+
+  $start += @entries * 0x20;
+  for my $hash (@entries) {
+    my $entry = $entries{$hash};
+    print $fh pack '(QQLLLL)<',
+      cityhash64_as_int $hash,
+      $start + $entry->{offset},
+      $entry->{flags},
+      $entry->{crc},
+      $entry->{size},
+      length $entry->{data};
+  }
+  print $fh $_ for map { $entries{$_}->{data} } @entries;
 }
 
 

@@ -47,15 +47,20 @@ method format_module ($file) {
 }
 
 
-method mount ($filepath) {
-  my $file = path $filepath;
-  my $format = $self->format_module($file);
-  $self->is_mounted($file) and croak
-    sprintf "Can't mount %s: Already mounted", $filepath;
+method mount ($mountable) {
+  if ( not $mountable isa Archive::SCS::Mountable ) {
+    my $file = path $mountable;
+    my $format = $self->format_module($file);
+    $mountable = $format->new(file => $file);
+  }
+  my $basename = $mountable->file->basename;
 
-  print STDERR sprintf "%s: ", $file->basename;
+  $self->is_mounted($mountable) and croak
+    sprintf "%s: Already mounted", $basename;
 
-  my $mount = $format->new(file => $file)->mount;
+  print STDERR sprintf "%s: ", $basename;
+
+  my $mount = $mountable->mount;
   push @mounts, $mount;
   push $entries{$_}->@*, $mount for my @entries = $mount->entries;
   $mount->read_dir_tree(@ROOTS);
@@ -66,9 +71,12 @@ method mount ($filepath) {
 }
 
 
-method unmount ($filepath) {
-  my $mount = $self->is_mounted( path $filepath ) or croak
-    sprintf "Can't unmount %s: Not mounted", $filepath;
+method unmount ($mount) {
+  if ( not $mount isa Archive::SCS::Mountable ) {
+    my $file = path $mount;
+    $mount = first { $file->realpath eq $_->file->realpath } @mounts or croak
+      sprintf "%s: Not mounted", $file->basename;
+  }
 
   $mount->unmount;
 
@@ -84,8 +92,8 @@ method unmount ($filepath) {
 }
 
 
-method is_mounted ($file) {
-  first { $file->realpath eq $_->file->realpath } @mounts
+method is_mounted ($mountable) {
+  first { $mountable->file->realpath eq $_->file->realpath } @mounts
 }
 
 
@@ -203,7 +211,7 @@ value, hex-encoded in network byte order as a 16-byte scalar PV.
 
 =head2 set_formats
 
-  $scs = $scs->set_formats(qw[ HashFS InMemory ]);
+  $scs = $scs->set_formats(qw[ HashFS Zip ]);
 
 =head2 unmount
 

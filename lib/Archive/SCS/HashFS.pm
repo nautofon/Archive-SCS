@@ -2,9 +2,11 @@ use v5.38;
 use feature 'class';
 no warnings 'experimental::class';
 
-class Archive::SCS::HashFS 0.00;
+class Archive::SCS::HashFS 0.00
+  :isa( Archive::SCS::Mountable );
 
 use Archive::SCS::CityHash qw(cityhash64 cityhash64_int);
+use Archive::SCS::DirIndex;
 use Carp 'croak';
 use Compress::Raw::Zlib 2.048 qw(crc32 Z_OK Z_STREAM_END);
 use Fcntl 'SEEK_SET';
@@ -65,8 +67,6 @@ method mount () {
   $hash_method eq 'CITY' or croak
     "$filename: HashFS hash method '$hash_method' unsupported";
 
-  print STDERR sprintf "%s: ", $filename;
-
   # Read HashFS entry headers
 
   my $header_template = '(QQLLLL)<';
@@ -118,17 +118,12 @@ method read_dir_tree (@roots) {
     my $dir = $dirs[$i];
 
     my $data = eval { $self->read_entry( cityhash64 $dir ) };
-    defined $data or next;
+    $data isa Archive::SCS::DirIndex or croak
+      sprintf "%s: Directory '%s' not found", __PACKAGE__, $dir;
 
     $dir .= '/' if length $dir;
-    for my $item (split /\n/, $data) {
-      if ('*' eq substr $item, 0, 1) {
-        push @dirs, $dir . substr $item, 1;
-      }
-      else {
-        push @files, $dir . $item;
-      }
-    }
+    push @dirs,  map { "$dir$_" } $data->dirs;
+    push @files, map { "$dir$_" } $data->files;
   }
 }
 
@@ -183,7 +178,19 @@ method read_entry ($hash) {
     $file->basename, $crc, $entry->{crc};
   # The official SCS extractor doesn't seem to verify the CRC
 
-  return $data;
+  # Parse directory listing
+
+  $entry->{is_dir} or return $data;
+  my %dir_index;
+  for my $item (split /\n/, $data) {
+    if ('*' eq substr $item, 0, 1) {
+      push $dir_index{dirs}->@*, substr $item, 1;
+    }
+    else {
+      push $dir_index{files}->@*, $item;
+    }
+  }
+  return Archive::SCS::DirIndex->new(%dir_index);
 }
 
 
@@ -235,11 +242,11 @@ Hash values used with this module must be in the internal format
 
 =head2 list_dirs
 
-  @directories = $scs->list_dirs;
+  @directories = $archive->list_dirs;
 
 =head2 list_files
 
-  @files = $scs->list_files;
+  @files = $archive->list_files;
 
 =head2 mount
 

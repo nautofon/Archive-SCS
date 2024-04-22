@@ -13,8 +13,10 @@ try {
   require Archive::SCS::CityHash;
   require Archive::SCS::DirIndex;
   require Archive::SCS::Mountable;
+  require Archive::SCS::TObj;
 
   require Archive::SCS::HashFS;
+  require Archive::SCS::HashFS2;
   require Archive::SCS::InMemory;
 
   require Archive::SCS;

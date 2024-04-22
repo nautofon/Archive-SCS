@@ -11,8 +11,9 @@ use Module::Load 'load';
 use Path::Tiny 0.054 'path';
 
 use Archive::SCS::HashFS;
+use Archive::SCS::HashFS2;
 
-field @formats = qw( HashFS );
+field @formats = qw( HashFS2 HashFS );
 
 field @mounts;
 field %entries;

@@ -4,6 +4,9 @@ use ExtUtils::MakeMaker::CPANfile;
 WriteMakefile(
   ABSTRACT => 'SCS archive controller',
   AUTHOR => 'nautofon',
+  EXE_FILES => [
+    'script/scs_archive',
+  ],
   LICENSE => 'perl_5',
   META_MERGE => {
     'dynamic_config' => 0,

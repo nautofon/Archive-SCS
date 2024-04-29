@@ -12,6 +12,7 @@ try {
 
   require Archive::SCS::CityHash;
   require Archive::SCS::DirIndex;
+  require Archive::SCS::GameDir;
   require Archive::SCS::Mountable;
   require Archive::SCS::TObj;
 

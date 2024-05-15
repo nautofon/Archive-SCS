@@ -20,3 +20,5 @@
 \.DS_Store$
 \.pl$
 \.webloc$
+
+script/hashfs2_index_table.pl

@@ -76,6 +76,13 @@ method list_files () {
 }
 
 
+method entry_meta ($hash) {
+  return {
+    is_dir => $entries{ $hash } isa Archive::SCS::DirIndex,
+  };
+}
+
+
 method add_entry ($path, $entry) {
   if (ref $entry eq 'HASH') {
     $entry = Archive::SCS::DirIndex->new($entry->%*);

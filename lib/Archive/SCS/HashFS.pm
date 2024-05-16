@@ -144,6 +144,11 @@ method list_files () {
 }
 
 
+method entry_meta ($hash) {
+  return $entries{ $hash };
+}
+
+
 method read_entry ($hash) {
   $fh or croak sprintf "%s: Not mounted", $file->basename;
 

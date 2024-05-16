@@ -64,7 +64,7 @@ method mount ($mountable) {
   push $entries{$_}->@*, $mount for my @entries = $mount->entries;
   $mount->read_dir_tree(@ROOTS);
 
-  return $self;
+  return $mount;
 }
 
 
@@ -84,12 +84,20 @@ method unmount ($mount) {
   }
   @mounts = grep { $mount != $_ } @mounts;
 
-  return $self;
+  return $mount;
 }
 
 
 method is_mounted ($mountable) {
   first { $mountable->file->realpath eq $_->file->realpath } @mounts
+}
+
+
+method entry_mounts ($path) {
+  my $mounts = $entries{ cityhash64 $path };
+  $mounts //= $entries{ cityhash64_hex $path };
+  my @mounts = $mounts ? $mounts->@* : ();
+  return @mounts;
 }
 
 
@@ -195,7 +203,7 @@ orphans are known to exist in 1.49.3.14:
 
 =head2 mount
 
-  $scs = $scs->mount($pathname);
+  $archive = $scs->mount($pathname);
 
 =head2 read_entry
 
@@ -211,7 +219,7 @@ value, hex-encoded in network byte order as a 16-byte scalar PV.
 
 =head2 unmount
 
-  $scs = $scs->unmount($pathname);
+  $archive = $scs->unmount($pathname);
 
 =head1 SEE ALSO
 

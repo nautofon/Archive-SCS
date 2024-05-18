@@ -58,15 +58,11 @@ method mount ($mountable) {
   $self->is_mounted($mountable) and croak
     sprintf "%s: Already mounted", $basename;
 
-  print STDERR sprintf "%s: ", $basename;
-
   my $mount = $mountable->mount;
   push @mounts, $mount;
   push $entries{$_}->@*, $mount for my @entries = $mount->entries;
   $mount->read_dir_tree(@ROOTS);
 
-  say STDERR sprintf "mounted, %i entr%s",
-    (scalar @entries), (@entries == 1 ? "y" : "ies");
   return $self;
 }
 
@@ -87,7 +83,6 @@ method unmount ($mount) {
   }
   @mounts = grep { $mount != $_ } @mounts;
 
-  say STDERR sprintf "%s: unmounted", $mount->file->basename;
   return $self;
 }
 

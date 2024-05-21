@@ -3,7 +3,7 @@ use ExtUtils::MakeMaker::CPANfile;
 
 WriteMakefile(
   ABSTRACT => 'SCS archive controller',
-  AUTHOR => 'nautofon',
+  AUTHOR => 'nautofon <nautofon@cpan.org>',
   EXE_FILES => [
     'script/scs_archive',
   ],
@@ -25,7 +25,7 @@ WriteMakefile(
   MIN_PERL_VERSION => '5.038',
   NAME => 'Archive::SCS',
   NO_MYMETA => 1,
-  VERSION => '0.00',
+  VERSION => '0.01',
   test => {
     RECURSIVE_TEST_FILES => 1,
   },

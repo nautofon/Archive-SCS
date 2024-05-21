@@ -3,7 +3,7 @@ use feature 'class';
 no warnings 'experimental::builtin';
 no warnings 'experimental::class';
 
-class Archive::SCS::GameDir 0.00;
+class Archive::SCS::GameDir 0.01;
 
 use Archive::SCS;
 use Carp 'croak';

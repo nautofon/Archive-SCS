@@ -1,6 +1,6 @@
 use v5.38;
 
-package Archive::SCS::CityHash 0.00;
+package Archive::SCS::CityHash 0.01;
 
 use Exporter 'import';
 use String::CityHash 0.06;

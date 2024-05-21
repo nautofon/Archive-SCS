@@ -4,11 +4,18 @@ This software is a set of Perl modules to read and write the contents
 of .scs compressed archive files. It includes the command-line tool
 `scs_archive`, which is designed to easily extract files or directories
 from SCS archives.
+Such archives are primarily used with the
+[ATS](https://americantrucksimulator.com/) and
+[ETS2](https://eurotrucksimulator2.com/) truck simulator games.
 
-Decompression and extraction of texture objects in HashFS version 2
-archives (1.50+) is currently unimplemented.
+> [!NOTE]
+>
+> Decompression and extraction of texture objects in HashFS version 2
+> archives (1.50+) is currently unimplemented.
 
 This software designed for Unix-y systems, i.e. Linux / Mac.
+(Users of Windows may be better served with the
+[official packer](https://modding.scssoft.com/wiki/Documentation/Tools/Game_Archive_Packer).)
 
 ### Installation
 
@@ -47,11 +54,10 @@ particular range is to point cpanminus directly to one of the tarballs:
 cpanm https://cpan.metacpan.org/authors/id/A/AL/ALEXBIO/String-CityHash-0.10.tar.gz
 ```
 
-Archive::SCS itself is not yet available on CPAN, but you can install it
-from GitHub:
+Archive::SCS itself is available on CPAN, so installing it is easy:
 
 ```sh
-cpanm https://github.com/nautofon/Archive-SCS.git
+cpanm Archive::SCS
 
 scs_archive --version
 scs_archive --extract def/city.sii def/country.sii

@@ -2,7 +2,7 @@ use v5.38;
 use feature 'class';
 no warnings 'experimental::class';
 
-class Archive::SCS::HashFS2 0.00
+class Archive::SCS::HashFS2 0.01
   :isa( Archive::SCS::Mountable );
 
 use Archive::SCS::CityHash qw(

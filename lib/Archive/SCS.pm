@@ -2,7 +2,7 @@ use v5.38;
 use feature 'class';
 no warnings 'experimental::class';
 
-class Archive::SCS 0.00;
+class Archive::SCS 0.01;
 
 use Archive::SCS::CityHash qw(cityhash64 cityhash64_hex cityhash64_as_hex);
 use Carp 'croak';

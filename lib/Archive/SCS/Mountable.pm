@@ -2,7 +2,7 @@ use v5.38;
 use feature 'class';
 no warnings 'experimental::class';
 
-class Archive::SCS::Mountable 0.00;
+class Archive::SCS::Mountable 0.01;
 
 
 =head1 NAME

@@ -6,6 +6,7 @@ requires "String::CityHash" => ">= 0.06, <= 0.10";
 on 'test' => sub {
   requires "Feature::Compat::Defer" => "0";
   requires "Feature::Compat::Try" => "0";
+  requires "IPC::Run3" => "0";
 };
 
 on 'configure' => sub {

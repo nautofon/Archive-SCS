@@ -11,4 +11,5 @@ on 'test' => sub {
 
 on 'configure' => sub {
   requires "ExtUtils::MakeMaker::CPANfile" => "0.08";
+  requires "Path::Tiny" => "0.062";
 };

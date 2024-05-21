@@ -8,14 +8,23 @@ Such archives are primarily used with the
 [ATS](https://americantrucksimulator.com/) and
 [ETS2](https://eurotrucksimulator2.com/) truck simulator games.
 
-> [!NOTE]
->
-> Decompression and extraction of texture objects in HashFS version 2
-> archives (1.50+) is currently unimplemented.
+**Decompression and extraction of texture objects in HashFS version 2
+archives (1.50+) is currently unimplemented.**
 
-This software designed for Unix-y systems, i.e. Linux / Mac.
+This software is designed for Unix-y systems, i.e. Linux / Mac.
 (Users of Windows may be better served with the
 [official packer](https://modding.scssoft.com/wiki/Documentation/Tools/Game_Archive_Packer).)
+
+### More information
+
+CPAN distribution:
+https://metacpan.org/dist/Archive-SCS
+
+Source repository:
+https://github.com/nautofon/Archive-SCS
+
+Discussion thread on the SCS forum:
+https://forum.scssoft.com/viewtopic.php?t=330746
 
 ### Installation
 
@@ -94,8 +103,11 @@ For general information on installing Perl modules, see
 
 Thank you for considering to contribute! Patches and issue reports
 are welcome.
-For non-trivial patches, I suggest you get in touch with me first, for
-example by PM to `nautofon` on the [SCS forum](https://forum.scssoft.com/).
+
+For non-trivial patches, I suggest you get in touch with me first,
+for example by posting in the
+[SCS forum thread](https://forum.scssoft.com/viewtopic.php?t=330746)
+(or send a PM to `nautofon`, if you prefer).
 
 ### License
 

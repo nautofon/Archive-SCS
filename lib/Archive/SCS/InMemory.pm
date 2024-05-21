@@ -2,7 +2,7 @@ use v5.38;
 use feature 'class';
 no warnings 'experimental::class';
 
-class Archive::SCS::InMemory 0.01
+class Archive::SCS::InMemory 0.02
   :isa( Archive::SCS::Mountable );
 
 use Archive::SCS::CityHash 'cityhash64';

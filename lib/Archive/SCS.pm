@@ -2,7 +2,7 @@ use v5.38;
 use feature 'class';
 no warnings 'experimental::class';
 
-class Archive::SCS 0.01;
+class Archive::SCS 0.02;
 
 use Archive::SCS::CityHash qw(cityhash64 cityhash64_hex cityhash64_as_hex);
 use Carp 'croak';
@@ -225,7 +225,11 @@ value, hex-encoded in network byte order as a 16-byte scalar PV.
 
 =over
 
+=item * L<Archive::SCS::GameDir>
+
 =item * L<Archive::SCS::HashFS>
+
+=item * L<Archive::SCS::HashFS2>
 
 =back
 

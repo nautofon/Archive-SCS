@@ -31,7 +31,7 @@ pod2usage unless
 
 # Discover game install dir
 
-my $game_dir = Archive::SCS::GameDir->new;
+my $game_dir = Archive::SCS::GameDir->new( game => $opts{game} );
 
 
 # Print version info

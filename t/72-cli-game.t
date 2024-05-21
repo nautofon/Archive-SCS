@@ -20,8 +20,6 @@ $tempdir->child("steamapps/common/$_")->mkdir for $ATS, $ETS2;
 create_hashfs1 $tempdir->child("steamapps/common/$ATS/base.scs"), sample_base;
 create_hashfs1 $tempdir->child("steamapps/common/$ETS2/base.scs"), sample_base;
 
-TODO: { local $TODO = 'bug: --game option not passed through to GameDir';
-
 # --game short name / long name
 
 $ENV{STEAM_LIBRARY} = $tempdir;
@@ -43,7 +41,5 @@ $ENV{STEAM_LIBRARY} = undef;
 my $game_dir = $tempdir->child("steamapps/common/$ATS");
 like scs_archive('--version', -g => $game_dir),
   qr/$ATS version 0\.0\.0\.0/, 'path';
-
-}; # TODO
 
 done_testing;

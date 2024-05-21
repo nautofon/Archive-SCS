@@ -8,6 +8,7 @@ BEGIN {
   our @EXPORT = qw(
     scs_archive
     create_hashfs1
+    create_hashfs2
     sample1
     sample2
     sample_base
@@ -16,6 +17,7 @@ BEGIN {
 
 use Archive::SCS;
 use Archive::SCS::HashFS;
+use Archive::SCS::HashFS2;
 use Archive::SCS::InMemory;
 
 use Cwd;
@@ -46,6 +48,14 @@ sub create_hashfs1 :prototype($$) {
   my $scs = Archive::SCS->new;
   $scs->mount($mem);
   Archive::SCS::HashFS::create_file($file, $scs);
+  $scs->unmount($mem);
+}
+
+sub create_hashfs2 :prototype($$) {
+  my ($file, $mem) = @_;
+  my $scs = Archive::SCS->new;
+  $scs->mount($mem);
+  Archive::SCS::HashFS2::create_file($file, $scs);
   $scs->unmount($mem);
 }
 

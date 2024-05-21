@@ -8,6 +8,9 @@ class Archive::SCS::HashFS2 0.00
 use Archive::SCS::CityHash qw(
   cityhash64
   cityhash64_int
+  cityhash64_hex
+  cityhash64_as_hex
+  cityhash64_as_int
 );
 use Archive::SCS::DirIndex;
 use Archive::SCS::TObj;
@@ -16,6 +19,7 @@ use Carp 'croak';
 use Compress::Raw::Zlib 2.048 qw(Z_OK Z_STREAM_END);
 use Fcntl 'SEEK_SET';
 use List::Util 'first';
+use Path::Tiny 0.011 'path';
 
 our @CARP_NOT = qw( Archive::SCS );
 
@@ -276,7 +280,123 @@ method entries () {
 
 
 sub create_file ($pathname, $scs) {
-  ...
+  $scs isa Archive::SCS or die;
+
+  # This subroutine is designed for internal testing. It probably won't
+  # produce files that are compatible with SCS. All entry contents are
+  # loaded into memory.
+
+  my (@entries, %entries);
+  push @entries, map { cityhash64 $_ } $scs->list_dirs, $scs->list_files;
+  push @entries, map { cityhash64_hex $_ } $scs->list_orphans;
+  push @entries, cityhash64 '' if eval { $scs->read_entry(''); 1 };
+  $entries{$_} = {
+    data => scalar eval { $scs->read_entry(cityhash64_as_hex $_) },
+    kind => 0x80,
+    flags1 => 0,
+  } for @entries;
+  @entries = grep { defined $entries{$_}->{data} } @entries;
+
+  # Serialize directory listings
+  for my $hash ( @entries ) {
+    $entries{$hash}->{data} isa Archive::SCS::DirIndex or next;
+    my @dirs  = map { "/$_" } $entries{$hash}->{data}->dirs;
+    my @files = $entries{$hash}->{data}->files;
+    my $count = @dirs + @files;
+    $entries{$hash}->{kind} = 0x81;
+    $entries{$hash}->{flags1} |= 1; # is_dir
+    $entries{$hash}->{data} =
+      (pack "V C[$count]", $count, map { length } @dirs, @files)
+      . join '', @dirs, @files;
+  }
+
+  # Texture objects are unimplemented
+  do { ... } for grep { $entries{$_}->{data} isa Archive::SCS::TObj } @entries;
+
+  @entries = sort {
+    ($entries{$b}->{flags1} & 4) <=> ($entries{$a}->{flags1} & 4)
+    or $entries{$a}->{flags1} <=> $entries{$b}->{flags1}
+    or ($entries{$b}->{kind} & 0x80) <=> ($entries{$a}->{kind} & 0x80)
+    or $entries{$a}->{kind} <=> $entries{$b}->{kind}
+  } @entries;
+
+  # Prepare entry contents
+  my $start = 0x60;
+  my $offset = 0;
+  for my $hash (@entries) {
+    my $entry = $entries{$hash};
+
+    $entry->{usize} = length $entry->{data};
+    $entry->{compression} = 0;
+    my $compressed = _compress_zlib($entry->{data});
+    if (length $compressed < length $entry->{data}) {
+      $entry->{data} = $compressed;
+      $entry->{compression} = 0x10;
+    }
+
+    $entry->{offset} = $offset;
+    my $size = length $entry->{data};
+    $entry->{padding} = $size & 0xf ? 0x10 - $size & 0xf : 0;
+    $offset += $size + $entry->{padding};
+  }
+
+  # Prepare indexes
+  my $start1 = $start + $offset;
+  my $index_offset = 0;
+  for my $hash ( @entries ) {
+    my $entry = $entries{$hash};
+
+    my $part_offset = $index_offset / 4 + 1;
+    my $part_offset_low  =  $part_offset & 0x00ffff;
+    my $part_offset_high = ($part_offset & 0xff0000) >> 0x10;
+    my $usize_low  =  $entry->{usize} & 0x00ffff;
+    my $usize_high = ($entry->{usize} & 0xff0000) >> 0x10;
+    my $zsize_low  =  length $entry->{data} & 0x00ffff;
+    my $zsize_high = (length $entry->{data} & 0xff0000) >> 0x10;
+
+    $entry->{index1} = pack '(QLSS)<',
+      cityhash64_as_int $hash, $index_offset / 4, 1, $entry->{flags1};
+    $entry->{index2} = pack '(SCC SCC SCC LL)<',
+      $part_offset_low, $part_offset_high, $entry->{kind},
+      $zsize_low, $zsize_high, $entry->{compression},
+      $usize_low, $usize_high, 0,
+      0, ($start + $entry->{offset}) / 0x10;
+
+    $index_offset += length $entry->{index2};
+  }
+
+  my $index1 = join '', map { $entries{$_}->{index1} } sort @entries;
+  my $index2 = join '', map { $entries{$_}->{index2} } @entries;
+  $index1 = _compress_zlib($index1);
+  $index2 = _compress_zlib($index2);
+  my $padding1 = length $index1 & 0xf ? 0x10 - length $index1 & 0xf : 0;
+  my $start2 = $start1 + (length $index1) + $padding1;
+
+  # Write file with header
+  my $header = pack 'A4 vv A4 V  VVV (QQQ)<',
+    $MAGIC, 2, 0, 'CITY', (scalar @entries),
+    (length $index1), (@entries * 5), (length $index2),
+    $start1, $start2, 0;
+
+  my $fh = (path $pathname)->openw_raw;
+  print $fh $header, "\0" x ($start - length $header);
+  print $fh $entries{$_}->{data}, "\0" x $entries{$_}->{padding} for @entries;
+  print $fh $index1, "\0" x $padding1;
+  print $fh $index2;
+}
+
+
+sub _compress_zlib ($data) {
+  state $zlib_d = do {
+    my %opts = ( -CRC32 => 1, -WindowBits => 15, -Level => 9 );
+    Compress::Raw::Zlib::Deflate->new( %opts ) or die
+  };
+  state $rfc1950header = chr( 8 | 15-8 << 4 ) . chr( 26 | 0 << 5 | 3 << 6 );
+
+  $zlib_d->deflate( \($data), \(my $compressed = '') );
+  $zlib_d->flush( \$compressed );
+  $zlib_d->deflateReset;
+  return $rfc1950header . $compressed;
 }
 
 

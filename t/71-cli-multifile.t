@@ -17,7 +17,7 @@ my $sample1 = $tempdir->child('sample1.scs');
 create_hashfs1 $sample1, sample1;
 
 my $sample2 = $tempdir->child('sample2.scs');
-create_hashfs1 $sample2, sample2;
+create_hashfs2 $sample2, sample2;
 
 like scs_archive(-m => $sample2, -m => $sample1, -o => '-', -x => 'orphan'),
   qr{whats my name}, 'union';

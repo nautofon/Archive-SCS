@@ -1,7 +1,7 @@
 #!perl
 use strict;
 use warnings;
-use lib 'lib';
+use lib 'lib', 't/lib';
 
 use Feature::Compat::Defer;
 use Path::Tiny 0.119;
@@ -11,32 +11,13 @@ my $f1 = Path::Tiny->tempfile('Archive-SCS-test-XXXXXX');
 defer { $f1->remove; }
 
 use Archive::SCS;
-use Archive::SCS::HashFS;
-use Archive::SCS::InMemory;
+use TestArchiveSCS;
 
-# Create test data
+# Roundtrip: Create new HashFS file of sample1 test data and read it back
 
-my $mem = Archive::SCS::InMemory->new;
-$mem->add_entry('ones', '1' x 100);
-$mem->add_entry('empty', '');
-$mem->add_entry('orphan', 'whats my name?');
-$mem->add_entry('', {
-  dirs  => [qw( emptydir dir )],
-  files => [qw( ones empty )],
-});
-$mem->add_entry('emptydir', { dirs => [], files => [] });
-$mem->add_entry('dir', { dirs => ['subdir'], files => [] });
-$mem->add_entry('dir/subdir', { dirs => [], files => ['SubDirFile'] });
-$mem->add_entry('dir/subdir/SubDirFile', 'I am in a subdirectory');
-
-# Roundtrip: Write new HashFS file and read it back
+create_hashfs1 $f1, sample1;
 
 my $scs = Archive::SCS->new;
-
-$scs->mount($mem);
-Archive::SCS::HashFS::create_file($f1, $scs);
-$scs->unmount($mem);
-
 $scs->mount($f1);
 
 # Compare HashFS contents with test data

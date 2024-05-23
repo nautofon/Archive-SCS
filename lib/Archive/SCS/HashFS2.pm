@@ -1,4 +1,4 @@
-use v5.38;
+use v5.39.2;
 use feature 'class';
 no warnings 'experimental::class';
 
@@ -233,9 +233,9 @@ method read_entry ($hash) {
     my $status = $zlib->inflate( \(my $raw = $data), \$data );
 
     $status == Z_OK || $status == Z_STREAM_END
-      or do{ warnings::warnif io =>
+      or warnings::warnif io =>
       sprintf "%s: Inflation failed: %s (%i)",
-      $file->basename, $zlib->msg // "", $status; use XXX; YYY $entry;};
+      $file->basename, $zlib->msg // "", $status;
 
     $zlib->inflateReset;
 

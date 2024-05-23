@@ -18,13 +18,13 @@ This software is designed for Unix-y systems, i.e. Linux / Mac.
 ### More information
 
 CPAN distribution:
-https://metacpan.org/dist/Archive-SCS
+<https://metacpan.org/dist/Archive-SCS>
 
 Source repository:
-https://github.com/nautofon/Archive-SCS
+<https://github.com/nautofon/Archive-SCS>
 
 Discussion thread on the SCS forum:
-https://forum.scssoft.com/viewtopic.php?t=330746
+<https://forum.scssoft.com/viewtopic.php?t=330746>
 
 ### Installation
 

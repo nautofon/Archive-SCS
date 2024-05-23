@@ -50,6 +50,9 @@ WriteMakefile(
   NAME => 'Archive::SCS',
   NO_MYMETA => 1,
   VERSION => '0.02',
+  dist => {
+    TARFLAGS => '--format=ustar -c -v -f', # avoid PaxHeader in tarball
+  },
   test => {
     RECURSIVE_TEST_FILES => 1,
   },

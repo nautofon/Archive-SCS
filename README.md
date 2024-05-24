@@ -53,17 +53,6 @@ The recommended way to install Perl modules is from CPAN by using a
 management tool like [cpanminus](https://metacpan.org/pod/App::cpanminus).
 Among other things, it will install all dependencies automatically.
 
-However, there is an exception:
-Currently, Archive::SCS requires a specific version range of the
-[String::CityHash](https://metacpan.org/release/ALEXBIO/String-CityHash-0.10/view/lib/String/CityHash.pm)
-module, which is only available from BackPAN. Suitable versions
-are >= 0.06 and <= 0.10. An easy way to install a version from that
-particular range is to point cpanminus directly to one of the tarballs:
-
-```sh
-cpanm https://cpan.metacpan.org/authors/id/A/AL/ALEXBIO/String-CityHash-0.10.tar.gz
-```
-
 Archive::SCS itself is available on CPAN, so installing it is easy:
 
 ```sh
@@ -87,14 +76,15 @@ advanced, in part because you'll need to handle all prerequisites
 yourself.
 
 ```sh
-# Manual install
 perl Makefile.PL
 make
 make test
+
+# Manual install
 make install
 
 # Use the tool without installing
-perl -I lib script/scs_archive ...
+perl -Iblib/arch -Iblib/lib script/scs_archive ...
 ```
 
 For general information on installing Perl modules, see
@@ -116,3 +106,6 @@ Copyright © 2024 [nautofon](https://github.com/nautofon)
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
+
+Includes [CityHash](https://github.com/google/cityhash) 1.0.3,
+Copyright © 2011 Google, Inc. (MIT license)

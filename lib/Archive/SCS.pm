@@ -163,10 +163,6 @@ Handles the union file system used by SCS archive files.
 Allows mounting of multiple files and
 performs lookups in all of them using the SCS hash algorithm.
 
-Note that this software currently requires L<String::CityHash
-B<version 0.10>|https://metacpan.org/release/ALEXBIO/String-CityHash-0.10/view/lib/String/CityHash.pm>,
-which is only available on BackPAN.
-
 =head1 METHODS
 
 =head2 formats
@@ -287,3 +283,6 @@ This software is copyright (c) 2024 by nautofon.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
+
+Includes L<CityHash|https://github.com/google/cityhash> 1.0.3,
+Copyright (c) 2011 Google, Inc. (MIT license)

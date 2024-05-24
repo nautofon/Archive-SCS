@@ -1,6 +1,9 @@
 use v5.28;
+use Config;
 use ExtUtils::MakeMaker::CPANfile;
 use Path::Tiny 0.062;
+
+$Config{use64bitint} or die "Can't build on 32-bit perl, aborting.";
 
 # The Perl toolchain doesn't know about feature class yet, so we
 # must specify all namespaces in META using the provides key.
@@ -23,10 +26,15 @@ path('lib')->visit(
 WriteMakefile(
   ABSTRACT => 'SCS archive controller',
   AUTHOR => 'nautofon <nautofon@cpan.org>',
+  CC => 'g++',
+  CCFLAGS => '-xc++',
   EXE_FILES => [
     'script/scs_archive',
   ],
+  INC => '-Iinc',
+  LIBS => '-lstdc++',
   LICENSE => 'perl_5',
+  MAGICXS => 1,
   META_MERGE => {
     'dynamic_config' => 0,
     'meta-spec' => {
@@ -50,6 +58,8 @@ WriteMakefile(
   NAME => 'Archive::SCS',
   NO_MYMETA => 1,
   VERSION => '0.03',
+  XSMULTI => 1,
+  XSOPT => '-C++',
   dist => {
     TARFLAGS => '--format=ustar -c -v -f', # avoid PaxHeader in tarball
   },

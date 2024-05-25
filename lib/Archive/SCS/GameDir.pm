@@ -1,9 +1,12 @@
-use v5.38;
-use feature 'class';
-no warnings 'experimental::builtin';
-no warnings 'experimental::class';
+use v5.32;
+use warnings;
+use Object::Pad 0.73;
 
 class Archive::SCS::GameDir 0.03;
+
+use builtin 'trim';
+use stable 0.031 'isa';
+no warnings 'experimental::builtin';
 
 use Archive::SCS;
 use Carp 'croak';
@@ -67,7 +70,8 @@ method path () {
 }
 
 
-method find ($name //= '') {
+method find ($name = '') {
+  $name //= '';
   if ( length $name ) {
     my $dir = Path::Tiny::path $name;
     if ($dir->child('base.scs')->exists) {
@@ -137,9 +141,11 @@ method version () {
   }
   else {  # < 1.50
     my $scs = $self->mounted('base.scs');
-    return eval { builtin::trim $scs->read_entry('version.txt') };
+    return eval { trim $scs->read_entry('version.txt') };
   }
 }
+
+1;
 
 
 =head1 NAME

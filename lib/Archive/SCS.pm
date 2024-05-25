@@ -1,8 +1,10 @@
-use v5.38;
-use feature 'class';
-no warnings 'experimental::class';
+use v5.32;
+use warnings;
+use Object::Pad 0.73;
 
 class Archive::SCS 0.03;
+
+use stable 0.031 'isa';
 
 use Archive::SCS::CityHash qw(cityhash64 cityhash64_hex cityhash64_as_hex);
 use Carp 'croak';
@@ -141,6 +143,8 @@ method list_orphans () {
   }
   return map { cityhash64_as_hex $_ } uniqstr sort @orphans;
 }
+
+1;
 
 
 =head1 NAME

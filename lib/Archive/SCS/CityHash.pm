@@ -1,4 +1,7 @@
-use v5.38;
+use v5.28;
+use warnings;
+use feature 'signatures';
+no warnings 'experimental::signatures';
 
 package Archive::SCS::CityHash 0.03;
 
@@ -63,3 +66,5 @@ sub cityhash64_as_int :prototype($) ($hash) {
 
 
 # The "internal format" of the hash is currently an 8-byte binary PV.
+
+1;

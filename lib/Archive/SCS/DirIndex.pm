@@ -1,6 +1,6 @@
-use v5.38;
-use feature 'class';
-no warnings 'experimental::class';
+use v5.28;
+use warnings;
+use Object::Pad 0.73;
 
 class Archive::SCS::DirIndex 0.03;
 
@@ -9,3 +9,5 @@ field $files :param = [];
 
 method dirs () { $dirs->@* }
 method files () { $files->@* }
+
+1;

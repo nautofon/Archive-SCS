@@ -1,0 +1,36 @@
+---
+name: coverage
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - 'main'
+
+jobs:
+  coveralls:
+    runs-on: ubuntu-latest
+    env:
+      AUTHOR_TESTING: 1
+      AUTOMATED_TESTING: 1
+      RELEASE_TESTING: 1
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shogo82148/actions-setup-perl@v1
+        with:
+          perl-version: '5.38'
+          install-modules-with: cpanm
+          install-modules-args: --skip-satisfied --with-configure
+          install-modules: |
+            Pod::Coverage
+            Devel::Cover::Report::Coveralls
+          enable-modules-cache: true
+      - name: make
+        run: |
+          perl Makefile.PL
+          make
+      - name: coverage
+        run: |
+          cover -test +ignore '^local/lib/' -nogcov -report Coveralls
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -5,10 +5,13 @@
 
 /lib/**/*.bs
 /lib/**/*.c
+/lib/**/*.gcda
 /lib/**/*.o
 
 /blib/*
 /pm_to_blib
+/cover_db/*
+/local/*
 *.gz
 /Archive-SCS-*
 

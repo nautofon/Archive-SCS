@@ -159,13 +159,16 @@ Archive::SCS - SCS archive controller
 
   my @contents = sort $scs->list_dirs, $scs->list_files;
 
-  say $scs->read_entry('version.txt');
+  say $scs->read_entry('def/env_data.sii');
 
 =head1 DESCRIPTION
 
 Handles the union file system used by SCS archive files.
 Allows mounting of multiple files and
 performs lookups in all of them using the SCS hash algorithm.
+
+These modules exist primarily to support the F<scs_archive>
+command-line tool included in this distribution.
 
 =head1 METHODS
 
@@ -198,7 +201,7 @@ archives.
 
 Paths are returned without a leading C</> because that's the
 way they are stored internally. This is subject to change,
-but the output of C<list_dirs()> will always be good to use
+but the output of C<list_files()> will always be good to use
 as path for C<read_entry()>.
 
 =head2 list_orphans
@@ -236,13 +239,27 @@ path is given as argument, the object will be created by
 attempting to load the given archive with the currently active
 formats. See C<set_formats()>.
 
+=head2 new
+
+  $scs = Archive::SCS->new;
+
+Creates a new L<Archive::SCS> object.
+
 =head2 read_entry
 
   $data = $scs->read_entry($pathname);
   $data = $scs->read_entry($hash);
 
+Returns the contents of the given entry. Directories will be
+returned as L<Archive::SCS::DirIndex> objects and S<HashFS v2>
+texture objects as L<Archive::SCS::TObj>.
+
 The argument may be the pathname within the archive or its hash
 value, hex-encoded in network byte order as a 16-byte scalar PV.
+Paths are expected without a leading C</> because that's the
+way they are stored internally. This is subject to change,
+but the output of C<list_files()> will always be good to use
+as path for C<read_entry()>.
 
 =head2 set_formats
 

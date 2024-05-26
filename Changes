@@ -4,6 +4,7 @@ Revision history for perl distribution Archive-SCS
 
   - Fix release: tar format, dependencies, minimum Perl version
     (feature 'class' had some bugs in v5.38)
+
   - Improve tests and documentation
 
 0.02 - 2024-05-21

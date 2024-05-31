@@ -2,6 +2,7 @@
 use strict;
 use warnings;
 use lib 'lib', 't/lib';
+use blib;
 use Feature::Compat::Defer;
 
 use IPC::Run3;

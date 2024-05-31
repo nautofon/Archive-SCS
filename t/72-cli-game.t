@@ -8,6 +8,8 @@ use Path::Tiny 0.119;
 use Test::More;
 use TestArchiveSCS;
 
+can_test_cli() or plan skip_all => 'Cannot test cli';
+
 # Create test dir structure
 
 my $tempdir = Path::Tiny->tempdir('Archive-SCS-test-XXXXXX');

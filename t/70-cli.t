@@ -11,6 +11,8 @@ use Path::Tiny 0.119;
 use Test::More;
 use TestArchiveSCS;
 
+can_test_cli() or plan skip_all => 'Cannot test cli';
+
 # General commands
 
 like scs_archive(),

@@ -72,6 +72,9 @@ WriteMakefile(
   dist => {
     TARFLAGS => '--format=ustar -c -v -f', # avoid PaxHeader in tarball
   },
+  realclean => {
+    FILES => 'MANIFEST MANIFEST.bak',
+  },
   test => {
     RECURSIVE_TEST_FILES => 1,
   },

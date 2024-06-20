@@ -111,6 +111,10 @@ for my $path ( map { s{^/|/$}{}rg } @extracts ) {
   }
 }
 
+for ( grep { length && path($_)->is_absolute || m{\.\.[/\\]} } @dirs, @files ) {
+  die sprintf "Refusing to extract insecure path '%s'", $_;
+}
+
 
 # Extract the files
 

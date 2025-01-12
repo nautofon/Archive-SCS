@@ -2,7 +2,7 @@ use v5.28;
 use warnings;
 use Object::Pad 0.73;
 
-class Archive::SCS::Mountable 1.05;
+class Archive::SCS::Mountable 1.06;
 
 
 sub handles_path ($class, $path, $header) {
@@ -37,7 +37,7 @@ L<nautofon|https://github.com/nautofon>
 
 =head1 COPYRIGHT
 
-This software is copyright (c) 2024 by nautofon.
+This software is copyright (c) 2025 by nautofon.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

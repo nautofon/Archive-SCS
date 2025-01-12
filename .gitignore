@@ -13,6 +13,6 @@
 /cover_db/*
 /local/*
 *.gz
-/Archive-SCS-*
+/Archive-SCS[-.]*
 
 /data/

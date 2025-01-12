@@ -2,7 +2,7 @@ use v5.34;
 use warnings;
 use Object::Pad 0.73 ':experimental(adjust_params)';
 
-class Archive::SCS::Directory 1.05
+class Archive::SCS::Directory 1.06
   :isa( Archive::SCS::Mountable );
 
 use builtin 'reftype';

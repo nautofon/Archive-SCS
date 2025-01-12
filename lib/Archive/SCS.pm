@@ -12,10 +12,11 @@ use List::Util 1.45 qw(first uniqstr);
 use Module::Load 'load';
 use Path::Tiny 0.054 'path';
 
+use Archive::SCS::Directory;
 use Archive::SCS::HashFS;
 use Archive::SCS::HashFS2;
 
-field @formats = qw( HashFS2 HashFS );
+field @formats = qw( HashFS2 HashFS Directory );
 
 field @mounts;
 field %entries;
@@ -166,7 +167,7 @@ Archive::SCS - SCS archive controller
 =head1 DESCRIPTION
 
 Handles the union file system used by SCS archive files.
-Allows mounting of multiple files and
+Allows mounting of multiple files or extracted directories and
 performs lookups in all of them using the SCS hash algorithm.
 
 These modules exist primarily to support the F<scs_archive>
@@ -273,6 +274,8 @@ all formats implemented in this distribution, which currently
 are the following:
 
 =over
+
+=item * L<Archive::SCS::Directory>
 
 =item * L<Archive::SCS::HashFS>
 

@@ -11,6 +11,7 @@ on 'test' => sub {
   requires "IPC::Run3" => "0";
   requires "Feature::Compat::Defer" => "0";
   requires "Feature::Compat::Try" => "0";
+  requires "Test2::V0" => "0";
 };
 
 on 'configure' => sub {

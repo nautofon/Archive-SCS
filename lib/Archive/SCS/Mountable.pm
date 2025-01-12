@@ -4,6 +4,20 @@ use Object::Pad 0.73;
 
 class Archive::SCS::Mountable 1.05;
 
+
+sub handles_path ($class, $path, $header) {
+  warnings::warnif deprecated => sprintf
+    "%s->handles_file() is deprecated; please implement %s->handles_path()", ($class) x 2;
+  $class->handles_file($path->openr_raw, $header);
+}
+
+
+method path () {
+  warnings::warnif deprecated => sprintf
+    "%s->file() is deprecated; please implement %s->path()", (__CLASS__) x 2;
+  $self->file;
+}
+
 1;
 
 

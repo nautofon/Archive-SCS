@@ -12,12 +12,12 @@ use Archive::SCS::DirIndex;
 use Carp 'croak';
 use File::Temp 0.05 'mktemp';
 use List::Util 'first';
-use Path::Tiny 0.017 'path';
+use Path::Tiny 0.017 ();
 
 our @CARP_NOT = qw( Archive::SCS );
 
 field $is_mounted = 0;
-field $file = path mktemp 'Archive-SCS-InMemory-XXXXXXXX';
+field $path :reader = Path::Tiny::path mktemp 'Archive-SCS-InMemory-XXXXXXXX';
 # Archive::SCS expects that mounts relate to a file path,
 # so we need to make up a random one.
 
@@ -27,7 +27,8 @@ field @files;
 
 
 method file () {
-  $file
+  warnings::warnif deprecated => "file() is deprecated; use path()";
+  $path
 }
 
 

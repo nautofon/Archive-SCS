@@ -35,28 +35,30 @@ method set_formats {
 }
 
 
-method format_module ($file) {
-  open my $fh, '<:raw', $file or croak
-    sprintf "%s: $!", $file->basename;
-  read $fh, my $header, 8 or croak
-    sprintf "%s: $!", $file->basename;
+method format_module ($path) {
+  my $header = '';
+  if ($path->is_file) {
+    open my $fh, '<:raw', $path or croak
+      sprintf "%s: $!", $path->basename;
+    read $fh, $header, 8 or croak
+      sprintf "%s: $!", $path->basename;
+    close $fh;
+  }
 
   my @modules = map { __PACKAGE__ . "::$_" } @formats;
-  my $module = first { $_->handles_file($fh, $header) } @modules or croak
-    sprintf "%s: No suitable format handler found", $file->basename;
-
-  close $fh;
+  my $module = first { $_->handles_path($path, $header) } @modules or croak
+    sprintf "%s: No suitable format handler found", $path->basename;
   return $module;
 }
 
 
 method mount ($mountable) {
   if ( not $mountable isa Archive::SCS::Mountable ) {
-    my $file = path $mountable;
-    my $format = $self->format_module($file);
-    $mountable = $format->new(file => $file);
+    my $path = path $mountable;
+    my $format = $self->format_module($path);
+    $mountable = $format->new(path => $path);
   }
-  my $basename = $mountable->file->basename;
+  my $basename = $mountable->path->basename;
 
   $self->is_mounted($mountable) and croak
     sprintf "%s: Already mounted", $basename;
@@ -72,9 +74,9 @@ method mount ($mountable) {
 
 method unmount ($mount) {
   if ( not $mount isa Archive::SCS::Mountable ) {
-    my $file = path $mount;
-    $mount = first { $file->realpath eq $_->file->realpath } @mounts or croak
-      sprintf "%s: Not mounted", $file->basename;
+    my $path = path $mount;
+    $mount = first { $path->realpath eq $_->path->realpath } @mounts or croak
+      sprintf "%s: Not mounted", $path->basename;
   }
 
   $mount->unmount;
@@ -91,7 +93,7 @@ method unmount ($mount) {
 
 
 method is_mounted ($mountable) {
-  first { $mountable->file->realpath eq $_->file->realpath } @mounts
+  first { $mountable->path->realpath eq $_->path->realpath } @mounts
 }
 
 

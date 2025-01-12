@@ -1,4 +1,4 @@
-requires "perl" => "5.032";
+requires "perl" => "v5.34";
 
 requires "builtin::Backport" => "0";
 requires "stable" => "0.031";

@@ -1,4 +1,4 @@
-use v5.32;
+use v5.34;
 use warnings;
 use Object::Pad 0.73;
 

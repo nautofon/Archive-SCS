@@ -5,7 +5,6 @@ use Object::Pad 0.73;
 class Archive::SCS::GameDir 1.05;
 
 use builtin 'trim';
-use stable 0.031 'isa';
 no warnings 'experimental::builtin';
 
 use Archive::SCS;

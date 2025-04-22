@@ -246,10 +246,8 @@ sub create_file ($pathname, $scs) {
     $entries{$_}->{data} isa Archive::SCS::DirIndex
   } keys %entries;
 
-  my %opts2 = ( -CRC32 => 1, -WindowBits => 15, -Level => 9 );
+  my %opts2 = ( -CRC32 => 1, -WindowBits => 15, -Level => 9, -AppendOutput => 1 );
   my $zlib_d = Compress::Raw::Zlib::Deflate->new(%opts2) or die;
-  my $rfc1950header = chr( 8 | 15-8 << 4 ) . chr( 26 | 0 << 5 | 3 << 6 );
-  # For some reason I can't get zlib to add the proper header automatically.
 
   my $offset = 0;
   for my $hash (@entries) {
@@ -260,7 +258,6 @@ sub create_file ($pathname, $scs) {
     $entries{$hash}->{crc} = $zlib_d->crc32;
     $entries{$hash}->{size} = $zlib_d->total_in;
     $zlib_d->deflateReset;
-    $compressed = $rfc1950header . $compressed;
     if (length $compressed < $entries{$hash}->{size}) {
       $entries{$hash}->{data} = $compressed;
       $entries{$hash}->{flags} |= 0x2;

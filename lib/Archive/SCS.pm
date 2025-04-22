@@ -15,8 +15,9 @@ use Path::Tiny 0.054 'path';
 use Archive::SCS::Directory;
 use Archive::SCS::HashFS;
 use Archive::SCS::HashFS2;
+use Archive::SCS::Zip;
 
-field @formats = qw( HashFS2 HashFS Directory );
+field @formats = qw( HashFS2 HashFS Directory Zip );
 
 field @mounts;
 field %entries;
@@ -65,9 +66,9 @@ method mount ($mountable) {
     sprintf "%s: Already mounted", $basename;
 
   my $mount = $mountable->mount;
+  $mount->read_dir_tree(@ROOTS);
   push @mounts, $mount;
   push $entries{$_}->@*, $mount for my @entries = $mount->entries;
-  $mount->read_dir_tree(@ROOTS);
 
   return $mount;
 }
@@ -280,6 +281,8 @@ are the following:
 =item * L<Archive::SCS::HashFS>
 
 =item * L<Archive::SCS::HashFS2>
+
+=item * L<Archive::SCS::Zip>
 
 =back
 

@@ -39,7 +39,7 @@ method set_formats {
 
 method format_module ($path) {
   my $header = '';
-  if ($path->is_file) {
+  if (! $path->is_dir) {
     open my $fh, '<:raw', $path or croak
       sprintf "%s: $!", $path->basename;
     read $fh, $header, 8 or croak

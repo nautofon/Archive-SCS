@@ -187,7 +187,7 @@ I<Since version 1.06.>
 
 =head2 handles_path
 
-  $bool = Archive::SCS::Directory->handles_path($path, $header);
+  $bool = Archive::SCS::Directory->handles_path($path_tiny, $header);
 
 =head2 list_dirs
 

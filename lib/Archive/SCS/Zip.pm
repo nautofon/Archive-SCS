@@ -253,7 +253,7 @@ Hash values used with this module must be in the internal format
 
 =head2 handles_path
 
-  $bool = Archive::SCS::Zip->handles_file($fh, $header);
+  $bool = Archive::SCS::Zip->handles_path($path_tiny, $header);
 
 =head2 list_dirs
 

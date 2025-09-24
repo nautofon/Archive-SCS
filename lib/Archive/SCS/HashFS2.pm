@@ -112,6 +112,8 @@ method mount () {
       my $size = (my $is_data_part = $kind & 0x80) ? 16
         : $kind == 1 ? 8
         : $kind == 2 ? 4
+        : $kind == 5 ? 32  # seen with .pma files on 1.55+
+        : $kind == 6 ? 8   # seen with .pmg files on 1.55+
         : 0 or warnings::warnif io =>
           sprintf "Encountered index 2 part with unknown kind %02x", $kind;
 

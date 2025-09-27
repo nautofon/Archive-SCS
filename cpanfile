@@ -6,7 +6,7 @@ requires "Compress::Raw::Zlib" => "2.070";
 requires "IO::Compress::Zip" => "0";
 requires "IO::Uncompress::Unzip" => "0";
 requires "List::Util" => "1.45";
-requires "Object::Pad" => "0.73";
+requires "Object::Pad" => "0.818"; # RT158048
 requires "Path::Tiny" => "0.125";
 
 on 'test' => sub {

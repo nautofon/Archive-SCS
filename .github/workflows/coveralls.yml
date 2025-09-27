@@ -31,6 +31,6 @@ jobs:
           make
       - name: coverage
         run: |
-          cover -test +ignore '^local/lib/' -nogcov -report Coveralls
+          cover -test -select_re '^blib' -ignore_re '.*' -nogcov -report Coveralls
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -1,6 +1,6 @@
 requires "perl" => "v5.34";
 
-requires "builtin::Backport" => "0";
+requires "builtin::compat" => "0.003003";
 requires "stable" => "0.031";
 requires "Compress::Raw::Zlib" => "2.070";
 requires "IO::Compress::Zip" => "0";

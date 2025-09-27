@@ -4,8 +4,7 @@ use Object::Pad 0.73;
 
 class Archive::SCS::GameDir 1.08;
 
-use builtin 'trim';
-no warnings 'experimental::builtin';
+use builtin::compat 'trim';
 
 use Archive::SCS;
 use Carp 'croak';

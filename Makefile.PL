@@ -53,9 +53,6 @@ WriteMakefile(
     'provides' => \%provides,
     'release_status' => 'stable',
     'resources' => {
-      bugtracker => {
-        web => 'https://forum.scssoft.com/viewtopic.php?t=330746',
-      },
       homepage => 'https://forum.scssoft.com/viewtopic.php?t=330746',
       repository => {
         type => 'git',
@@ -63,6 +60,9 @@ WriteMakefile(
         web => 'https://github.com/nautofon/Archive-SCS',
       },
     },
+    'x_contributors' => [
+      'Karen Etheridge <ether@cpan.org>',
+    ],
   },
   NAME => $main_module,
   NO_MYMETA => 1,

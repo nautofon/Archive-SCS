@@ -166,7 +166,7 @@ The directory tree is only read during mounting. To update the
 object's view of a directory, C<unmount()>, then C<mount()>.
 
 Hash values used with this module must be in the internal format
-(currently, an 8-byte scalar PV in network byte order).
+(currently, a 16-byte hex scalar in network byte order).
 
 I<Since version 1.06.>
 

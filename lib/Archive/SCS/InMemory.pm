@@ -153,7 +153,7 @@ way to create a new archive file from an L<Archive::SCS> object.
 =back
 
 Hash values used with this module must be in the internal format
-(currently, an 8-byte scalar PV in network byte order).
+(currently, a 16-byte hex scalar in network byte order).
 
 =head1 METHODS
 

@@ -2,7 +2,7 @@ use v5.34;
 use warnings;
 use Object::Pad 0.73 ':experimental(adjust_params)';
 
-class Archive::SCS::Directory 1.09
+class Archive::SCS::Directory 1.10
   :isa( Archive::SCS::Mountable );
 
 use builtin::compat 'reftype';
@@ -227,7 +227,7 @@ L<nautofon|https://github.com/nautofon>
 
 =head1 COPYRIGHT
 
-This software is copyright (c) 2025 by nautofon.
+This software is copyright (c) 2026 by nautofon.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

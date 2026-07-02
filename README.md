@@ -113,7 +113,7 @@ CPAN users can also report issues through RT.
 
 ### License
 
-Copyright © 2025 [nautofon](https://github.com/nautofon)
+Copyright © 2026 [nautofon](https://github.com/nautofon)
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

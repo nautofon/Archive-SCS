@@ -294,6 +294,11 @@ are the following:
 Removes the given SCS archive from currently mounted archives.
 Returns the archive's L<Archive::SCS::Mountable> object.
 
+=head1 LIMITATIONS
+
+The implementation of texture objects is still evolving and is
+currently inconsistent between format handlers.
+
 =head1 SEE ALSO
 
 =over

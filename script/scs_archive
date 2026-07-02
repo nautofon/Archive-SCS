@@ -185,8 +185,9 @@ Some files may not appear in a directory index. Such "orphans"
 can be listed separately. Files, orphans and directories can be
 extracted by using the C<--extract> command.
 
-Note that HashFS version 2 texture objects are not yet implemented.
-Trying to extract those with this tool currently won't yield a
+Note that the implementation of texture objects is still evolving
+and is currently inconsistent between format handlers.
+Trying to extract texture objects with this tool may not yield a
 useful result.
 
 =head1 COMMANDS

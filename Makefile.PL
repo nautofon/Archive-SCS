@@ -1,6 +1,5 @@
 use v5.32;
 use Config;
-use ExtUtils::CppGuess;
 use ExtUtils::MakeMaker::CPANfile;
 use Path::Tiny 0.062;
 
@@ -36,9 +35,14 @@ path('Changes')->slurp_raw =~ m/^\Q$main_module_version\E\s/m
   or die "$main_module version ($main_module_version) is not in Changes";
 
 WriteMakefile(
-  ExtUtils::CppGuess->new->makemaker_options,
   ABSTRACT => 'Read the contents of SCS union mount archives (HashFS)',
   AUTHOR => 'nautofon <nautofon@cpan.org>',
+  CC => 'g++',
+  CCFLAGS => " -xc++ $Config{cppflags}",
+  eval {
+    require ExtUtils::CppGuess;
+    ExtUtils::CppGuess->new->makemaker_options
+  },
   EXE_FILES => [
     'script/scs_archive',
   ],

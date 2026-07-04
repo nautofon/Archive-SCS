@@ -2,7 +2,7 @@ use v5.34;
 use warnings;
 use Object::Pad 0.73;
 
-class Archive::SCS::Zip 1.10
+class Archive::SCS::Zip 1.11
   :isa( Archive::SCS::Mountable );
 
 use builtin::compat qw( blessed true );

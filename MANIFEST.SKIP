@@ -4,6 +4,9 @@
 ^Makefile$
 ^Makefile\.old$
 
+^fatlib/(?:(?!\.pm).)*$
+^fatpacker\.
+
 ^lib/.*\.bs$
 ^lib/.*\.c$
 ^lib/.*\.gcda$

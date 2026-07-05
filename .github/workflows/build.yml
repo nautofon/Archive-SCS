@@ -13,6 +13,25 @@ on:
 jobs:
   dist:
     runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: shogo82148/actions-setup-perl@v1
+        with:
+          install-modules-with: cpanm
+          install-modules-args: --skip-satisfied
+      - name: make
+        run: |
+          cpanm . --installdeps --skip-satisfied --with-configure --with-develop
+          perl Makefile.PL
+          make manifest
+          make dist
+      - uses: actions/upload-artifact@v7
+        with:
+          path: Archive-SCS-*.tar.gz
+
+  test:
+    needs: dist
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         perl:
@@ -22,26 +41,18 @@ jobs:
           - '5.36'
           - '5.34'
       fail-fast: false
-    env:
-      AUTHOR_TESTING: 1
-      AUTOMATED_TESTING: 1
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v8
       - uses: shogo82148/actions-setup-perl@v1
         with:
           perl-version: ${{ matrix.perl }}
-          install-modules-with: cpanm
-          install-modules-args: --skip-satisfied --with-configure
-          enable-modules-cache: true
-      - name: make
+          enable-modules-cache: false
+      - name: prereqs
         run: |
-          perl Makefile.PL
-          make manifest
-          make dist
-          make
-      - name: test
-        run: |
-          make test
+          cpanm Archive-SCS-*.tar.gz --installdeps --skip-satisfied --with-configure
       - name: dist test
         run: |
           cpanm -v Archive-SCS-*.tar.gz
+        env:
+          AUTHOR_TESTING: 1
+          AUTOMATED_TESTING: 1

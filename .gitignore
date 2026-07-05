@@ -3,6 +3,9 @@
 /Makefile
 /Makefile.old
 
+/fatlib/*
+/fatpacker.*
+
 /lib/**/*.bs
 /lib/**/*.c
 /lib/**/*.gcda

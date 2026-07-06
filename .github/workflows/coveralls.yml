@@ -15,7 +15,7 @@ jobs:
       AUTOMATED_TESTING: 1
       RELEASE_TESTING: 1
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: shogo82148/actions-setup-perl@v1
         with:
           perl-version: '5.38'
@@ -27,6 +27,7 @@ jobs:
           enable-modules-cache: true
       - name: make
         run: |
+          cpanm -n ExtUtils::CppGuess
           perl Makefile.PL
           make
       - name: coverage
